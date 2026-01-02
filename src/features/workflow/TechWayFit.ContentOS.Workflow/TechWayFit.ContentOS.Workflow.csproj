@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Abstractions/TechWayFit.ContentOS.Abstractions.csproj" />
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Contracts/TechWayFit.ContentOS.Contracts.csproj" />
+    <ProjectReference Include="../../../features/content/TechWayFit.ContentOS.Content/TechWayFit.ContentOS.Content.csproj" />
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Kernel/TechWayFit.ContentOS.Kernel.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

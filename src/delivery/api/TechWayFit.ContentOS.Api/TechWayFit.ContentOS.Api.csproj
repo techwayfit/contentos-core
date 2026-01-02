@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Abstractions/TechWayFit.ContentOS.Abstractions.csproj" />
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Contracts/TechWayFit.ContentOS.Contracts.csproj" />
+    <ProjectReference Include="../../../features/content/TechWayFit.ContentOS.Content/TechWayFit.ContentOS.Content.csproj" />
+    <ProjectReference Include="../../../features/workflow/TechWayFit.ContentOS.Workflow/TechWayFit.ContentOS.Workflow.csproj" />
+    <ProjectReference Include="../../../features/media/TechWayFit.ContentOS.Media/TechWayFit.ContentOS.Media.csproj" />
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Kernel/TechWayFit.ContentOS.Kernel.csproj" />
+    <ProjectReference Include="../../../infrastructure/persistence/TechWayFit.ContentOS.Infrastructure.Persistence.Postgres/TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.csproj" />
+    <ProjectReference Include="../../../features/search/TechWayFit.ContentOS.Search/TechWayFit.ContentOS.Search.csproj" />
+    <ProjectReference Include="../../../features/tenancy/TechWayFit.ContentOS.Tenancy/TechWayFit.ContentOS.Tenancy.csproj" />
+    <ProjectReference Include="../../../infrastructure/events/TechWayFit.ContentOS.Infrastructure.Events/TechWayFit.ContentOS.Infrastructure.Events.csproj" />
+    <ProjectReference Include="../../../infrastructure/runtime/TechWayFit.ContentOS.Infrastructure.Runtime/TechWayFit.ContentOS.Infrastructure.Runtime.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

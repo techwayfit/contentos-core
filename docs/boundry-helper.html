@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ContentOS Boundary Helper</title>
+  <style>
+    :root { --bg:#0b1220; --card:#111a2e; --text:#e8eefc; --muted:#9fb0d0; --ok:#45d483; --warn:#ffcf5a; --bad:#ff6b6b; --line:#223256; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#070c18,#0b1220);color:var(--text)}
+    header{padding:22px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,18,32,.85);backdrop-filter:blur(8px)}
+    h1{margin:0;font-size:18px;letter-spacing:.2px}
+    p{margin:8px 0 0;color:var(--muted);font-size:13px}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:980px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:rgba(17,26,46,.85);border:1px solid var(--line);border-radius:14px;padding:14px}
+    .card h2{margin:0 0 10px;font-size:15px}
+    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
+    input[type="text"], textarea, select{
+      width:100%;border-radius:12px;border:1px solid var(--line);
+      background:#0b1326;color:var(--text);padding:10px 12px;outline:none
+    }
+    textarea{min-height:86px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:700px){.row{grid-template-columns:1fr 1fr}}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    button{
+      border:1px solid var(--line);background:#0c1833;color:var(--text);
+      padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:600
+    }
+    button:hover{border-color:#35508a}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}
+    .score{font-weight:700;color:var(--text)}
+    .result{border-radius:14px;padding:14px;border:1px solid var(--line);background:#0b1326}
+    .result h3{margin:0 0 6px;font-size:14px}
+    .result .where{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 0}
+    .tag{font-size:12px;border-radius:999px;padding:6px 10px;border:1px solid var(--line);background:#0c1833}
+    .tag.ok{border-color:rgba(69,212,131,.45);color:var(--ok)}
+    .tag.warn{border-color:rgba(255,207,90,.45);color:var(--warn)}
+    .tag.bad{border-color:rgba(255,107,107,.45);color:var(--bad)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    details{margin-top:10px}
+    summary{cursor:pointer;color:var(--muted);font-size:13px}
+    ul{margin:8px 0 0 18px;color:var(--muted);font-size:13px;line-height:1.55}
+    .small{font-size:12px;color:var(--muted)}
+    .kbd{font-family:ui-monospace,monospace;border:1px solid var(--line);padding:2px 6px;border-radius:8px;background:#0c1833;color:var(--text)}
+    .hint{border-left:3px solid #35508a;padding-left:10px;margin-top:10px;color:var(--muted);font-size:13px}
+    .footer{margin-top:14px;color:var(--muted);font-size:12px}
+    .two{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:980px){.two{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>ContentOS Boundary Helper</h1>
+      <p>Type a class name + description, or answer a few questions. It recommends the best project (Kernel/Domain/Contracts/Abstractions/AI/Infrastructure/API) and flags likely boundary violations.</p>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="card">
+        <h2>1) Quick Input</h2>
+
+        <div class="row">
+          <div>
+            <label>Class/Type name</label>
+            <input id="name" type="text" placeholder="e.g., TenantResolver, ContentPublishedEventV1, InMemoryEventBus, ContentItem, CreateContentRequest" />
+          </div>
+          <div>
+            <label>Kind (optional)</label>
+            <select id="kind">
+              <option value="">Auto-detect</option>
+              <option value="domain-entity">Domain Entity/Aggregate</option>
+              <option value="value-object">Value Object</option>
+              <option value="domain-event">Domain Event (internal fact)</option>
+              <option value="integration-event">Integration/Public Event (versioned)</option>
+              <option value="dto">API DTO (request/response)</option>
+              <option value="port">Port/Interface (repository/service)</option>
+              <option value="impl">Implementation (concrete class)</option>
+              <option value="controller">Controller/Endpoint</option>
+              <option value="middleware">Middleware</option>
+              <option value="ef">EF DbContext/Mapping/Migration</option>
+              <option value="search-impl">Search engine impl (Lucene/Elastic)</option>
+              <option value="storage-impl">Storage impl (S3/Azure Blob)</option>
+              <option value="identity-impl">Identity/JWT/OIDC impl</option>
+              <option value="ai-impl">AI orchestration/provider impl</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Description / responsibilities (important)</label>
+        <textarea id="desc" placeholder="e.g., Resolves tenant from HTTP header and stores it in AsyncLocal for the request."></textarea>
+
+        <div class="row">
+          <div>
+            <label>Does it touch HTTP (headers, middleware, controllers)?</label>
+            <select id="touchHttp">
+              <option value="unknown">Not sure</option>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+          <div>
+            <label>Does it touch DB/EF/SQL?</label>
+            <select id="touchDb">
+              <option value="unknown">Not sure</option>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Is it meant to be consumed across boundaries (API clients/modules/external systems)?</label>
+            <select id="publicSurface">
+              <option value="unknown">Not sure</option>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+          <div>
+            <label>Is it an interface that will have multiple implementations?</label>
+            <select id="multiImpl">
+              <option value="unknown">Not sure</option>
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="analyzeBtn">Analyze</button>
+          <button id="quizBtn">Guided Questions</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+
+        <div class="hint">
+          Tip: Use <span class="kbd">EventV1</span> suffix for Contracts integration events. Keep “TenantResolver/TenantContext/AsyncLocal” out of Kernel.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2) Recommendation</h2>
+        <div id="output" class="result">
+          <h3>Waiting for input…</h3>
+          <div class="small">Enter a class name and click <b>Analyze</b>.</div>
+        </div>
+
+        <details>
+          <summary>Project Map (what each project is for)</summary>
+          <ul>
+            <li><b>Kernel</b>: pure primitives, base domain types, cross-cutting constants. No AsyncLocal, no tenant/user resolution implementations.</li>
+            <li><b>Domain Bounded Contexts</b> (<span class="mono">Content/Media/Tenancy/Search/Workflow</span>): entities, invariants, internal domain events.</li>
+            <li><b>Contracts</b>: API DTOs + versioned integration/public events (<span class="mono">*EventV1</span>).</li>
+            <li><b>Abstractions</b>: ports/interfaces (repositories, IEventBus, ITenantResolver, IStorageProvider, ISearchProvider, IAIProvider).</li>
+            <li><b>AI</b>: AI orchestration + provider adapters (implementation). Must not mutate domain state directly.</li>
+            <li><b>Infrastructure.*</b>: implementations (EF/Postgres, Events/InMemoryBus, Storage providers, Search engines, Identity).</li>
+            <li><b>API</b>: controllers, middleware, DI composition, tenant resolution wiring.</li>
+          </ul>
+        </details>
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="card">
+        <h2>3) “Where should this go?” (Guided Flow)</h2>
+        <div id="wizard" class="result">
+          <h3>Click “Guided Questions” to start.</h3>
+          <div class="small">This asks a few yes/no questions and then recommends a project.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>4) Rules & Red Flags</h2>
+        <div class="result">
+          <h3>Instant red flags (boundary violations)</h3>
+          <ul>
+            <li><b>Kernel</b> containing: <span class="mono">TenantResolver</span> implementation, <span class="mono">AsyncLocal</span> request context, <span class="mono">CurrentUser</span> runtime context, event bus implementations.</li>
+            <li><b>Contracts</b> containing “domain events” (internal facts). Contracts events should be <b>integration/public</b> and versioned (<span class="mono">EventV1</span>).</li>
+            <li><b>Domain/Search</b> containing Lucene/Elastic indexing code (belongs to <b>Infrastructure.Search</b>).</li>
+            <li><b>AI</b> owning domain truth or directly publishing/approving/persisting content.</li>
+          </ul>
+          <div class="footer">This helper matches your current ContentOS principles (multi-tenant by default, modular, ADR-governed boundaries).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const projects = {
+      kernel: "TechWayFit.ContentOS.Kernel",
+      abstractions: "TechWayFit.ContentOS.Abstractions",
+      contracts: "TechWayFit.ContentOS.Contracts",
+      api: "TechWayFit.ContentOS.Api",
+      content: "TechWayFit.ContentOS.Content",
+      media: "TechWayFit.ContentOS.Media",
+      tenancy: "TechWayFit.ContentOS.Tenancy",
+      search: "TechWayFit.ContentOS.Search",
+      workflow: "TechWayFit.ContentOS.Workflow",
+      ai: "TechWayFit.ContentOS.AI",
+      infra_persistence: "TechWayFit.ContentOS.Infrastructure.Persistence",
+      infra_postgres: "TechWayFit.ContentOS.Infrastructure.Persistence.Postgres",
+      infra_events: "TechWayFit.ContentOS.Infrastructure.Events",
+      infra_identity: "TechWayFit.ContentOS.Infrastructure.Identity",
+      infra_search: "TechWayFit.ContentOS.Infrastructure.Search",
+      infra_storage: "TechWayFit.ContentOS.Infrastructure.Storage",
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function normalize(s){ return (s||"").toLowerCase().trim(); }
+
+    function tokensFromName(name){
+      const n = name.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+      return n.split(/[^a-z0-9]+/).filter(Boolean);
+    }
+
+    function guessKind(name, desc){
+      const t = tokensFromName(name).join(" ");
+      const d = normalize(desc);
+      const s = t + " " + d;
+
+      if (/(controller|endpoint)/.test(s)) return "controller";
+      if (/middleware/.test(s)) return "middleware";
+      if (/(dto|request|response)/.test(s)) return "dto";
+      if (/(eventv[0-9]+|integration event|public event)/.test(s)) return "integration-event";
+      if (/(domain event|domainevent)/.test(s) && !/eventv[0-9]+/.test(s)) return "domain-event";
+      if (/^(i)[a-z].*/i.test(name) || /(interface|contract|port)\b/.test(s) || /\b(i[a-z].*provider|repository|resolver|publisher|bus)\b/.test(s)) return "port";
+      if (/(dbcontext|migration|configuration|entity.*row|mapper|ef)/.test(s)) return "ef";
+      if (/(lucene|elasticsearch|opensearch|analyzer|index writer|indexer)/.test(s)) return "search-impl";
+      if (/(s3|azure blob|blob|storage|presigned|multipart)/.test(s)) return "storage-impl";
+      if (/(jwt|oidc|claims|identity|authn|authz)/.test(s)) return "identity-impl";
+      if (/(openai|azure openai|llm|prompt|embedding|rag|mcp|ai )/.test(s)) return "ai-impl";
+      if (/(id|slug|locale|versionnumber|value object)/.test(s)) return "value-object";
+      if (/(aggregate|entity|domain model|invariant|lifecycle)/.test(s)) return "domain-entity";
+      return "";
+    }
+
+    function scoreRecommendation(input){
+      const name = input.name;
+      const desc = input.desc;
+      const kind = input.kind || guessKind(name, desc);
+      const touchHttp = input.touchHttp;
+      const touchDb = input.touchDb;
+      const publicSurface = input.publicSurface;
+      const multiImpl = input.multiImpl;
+
+      const n = normalize(name);
+      const d = normalize(desc);
+      const s = n + " " + d;
+
+      // scoring buckets
+      const score = {};
+      Object.keys(projects).forEach(k => score[k] = 0);
+
+      const reasons = [];
+      const warnings = [];
+      const violations = [];
+
+      // Universal red flags for Kernel
+      const kernelRedFlags = /(asynclocal|requestcontext|currentuser|tenantresolver|tenantcontext|middleware|controller|dbcontext|ef|npgsql|lucene|elasticsearch|blob|s3|azure blob|openai|prompt|embedding|eventbus|inmemoryeventbus)/;
+
+      // Explicit kind routing
+      if (kind === "controller") score.api += 100;
+      if (kind === "middleware") score.api += 85;
+      if (kind === "dto") score.contracts += 95;
+      if (kind === "integration-event") score.contracts += 95;
+      if (kind === "domain-event") {
+        // choose bounded context based on tokens
+        score.content += /content/.test(s) ? 75 : 20;
+        score.workflow += /workflow/.test(s) ? 75 : 20;
+        score.media += /media/.test(s) ? 75 : 20;
+        score.tenancy += /(tenant|tenancy|site)/.test(s) ? 75 : 20;
+        score.search += /search|index/.test(s) ? 55 : 20;
+      }
+      if (kind === "port") score.abstractions += 85;
+      if (kind === "ef") score.infra_postgres += 95;
+      if (kind === "search-impl") score.infra_search += 95;
+      if (kind === "storage-impl") score.infra_storage += 95;
+      if (kind === "identity-impl") score.infra_identity += 90;
+      if (kind === "ai-impl") score.ai += 90;
+
+      // Heuristics by content
+      if (/eventbus|event publisher|publish\(/.test(s)) {
+        score.abstractions += 35;
+        score.infra_events += 55;
+        reasons.push("Eventing detected → interface in Abstractions, implementation in Infrastructure.Events.");
+      }
+
+      if (/inmemoryeventbus/.test(s)) {
+        score.infra_events += 90;
+        reasons.push("InMemoryEventBus is an Infrastructure.Events implementation.");
+      }
+
+      if (/tenantresolver|resolve tenant|subdomain|header|claims/.test(s)) {
+        if (/(interface|contract)\b/.test(s) || /^i[a-z]/i.test(name)) score.abstractions += 70;
+        else score.api += 30, score.infra_identity += 55;
+        reasons.push("Tenant resolution: contract in Abstractions, implementation in API/Infrastructure.Identity.");
+        // Kernel warning
+        if (/kernel/.test(s)) violations.push("Tenant resolution implementation must not live in Kernel.");
+      }
+
+      if (/asynclocal|request context|current user|currentuser/.test(s) || touchHttp === "yes") {
+        score.api += 55;
+        score.infra_identity += /claims|jwt|oidc|identity/.test(s) ? 30 : 10;
+        warnings.push("Runtime request/user context should not be in Kernel. Prefer API middleware + provider interfaces in Abstractions.");
+      }
+
+      if (touchDb === "yes" || /dbcontext|migration|configuration|mapper|row\b|npgsql|ef core/.test(s)) {
+        score.infra_postgres += 70;
+        reasons.push("DB/EF detected → Infrastructure.Persistence.Postgres.");
+      }
+
+      if (publicSurface === "yes") {
+        if (kind === "domain-entity" || kind === "value-object") {
+          warnings.push("If external consumers depend on this shape, prefer a DTO/event in Contracts rather than exposing domain types.");
+        } else {
+          score.contracts += 25;
+        }
+      }
+
+      if (multiImpl === "yes") score.abstractions += 20;
+
+      // Bounded context guessing for domain entities/value objects
+      if (kind === "domain-entity" || kind === "value-object") {
+        const addDomain = (ctxKey, pattern, pts) => { if (pattern.test(s)) score[ctxKey] += pts; };
+        addDomain("content", /(content|schema|field|localization|slug)/, 65);
+        addDomain("workflow", /(workflow|state|transition|approval)/, 65);
+        addDomain("media", /(media|asset|rendition|metadata|image|video)/, 65);
+        addDomain("tenancy", /(tenant|tenancy|site|plan)/, 65);
+        addDomain("search", /(search|query|filter|index definition)/, 45);
+
+        // Kernel only if it's a primitive/base type
+        if (/(tenantid|userid|entityid|moduleid|result|aggregate|entity\b|domainevent\b)/.test(s)) {
+          score.kernel += 50;
+          reasons.push("Looks like a platform primitive/base type → Kernel candidate.");
+        }
+      }
+
+      // Contracts naming check
+      if (/event$/.test(n) && !/eventv[0-9]+$/.test(n) && publicSurface === "yes") {
+        warnings.push("Public events should be versioned (e.g., ContentPublishedEventV1) and live in Contracts.");
+      }
+
+      // Kernel strictness
+      if (kernelRedFlags.test(s)) {
+        score.kernel -= 60;
+        if (/tenantresolver|tenantcontext|asynclocal|requestcontext|currentuser|eventbus|inmemoryeventbus/.test(s)) {
+          violations.push("Kernel must not contain runtime context, tenant/user resolution, or event bus implementations.");
+        }
+      }
+
+      // Pick winner
+      const entries = Object.entries(score).sort((a,b)=>b[1]-a[1]);
+      const [bestKey, bestScore] = entries[0];
+      const runnerUp = entries[1];
+
+      // Build guidance for where exactly
+      const where = projects[bestKey];
+      const also = runnerUp ? projects[runnerUp[0]] : null;
+
+      // Add "how to implement" hints
+      const implementHints = [];
+      if (bestKey === "abstractions") implementHints.push("Define interface/port only. No implementations, no HTTP/EF/SDK.");
+      if (bestKey === "contracts") implementHints.push("Keep DTO/event shapes stable. Version public events (EventV1). No business logic.");
+      if (bestKey === "kernel") implementHints.push("Keep it pure: primitives/base types only. No AsyncLocal, no tenant resolver impl.");
+      if (bestKey === "api") implementHints.push("Transport only: controllers/middleware/DI composition. No domain rules.");
+      if (bestKey === "infra_postgres") implementHints.push("EF/Npgsql DbContext, mappings, migrations, repository implementations.");
+      if (bestKey === "infra_events") implementHints.push("Concrete event bus (InMemory/MediatR/Outbox). Keep interfaces in Abstractions.");
+      if (bestKey === "infra_search") implementHints.push("Lucene/Elastic implementations. Keep search semantics in ContentOS.Search.");
+      if (bestKey === "infra_storage") implementHints.push("Blob/S3/Azure implementations. Keep media rules in ContentOS.Media.");
+      if (bestKey === "infra_identity") implementHints.push("JWT/OIDC/claims mapping implementations. Ports in Abstractions.");
+      if (bestKey === "ai") implementHints.push("AI orchestration/adapter implementation. Do not mutate domain state directly.");
+      if (["content","media","tenancy","workflow","search"].includes(bestKey)) implementHints.push("Domain truth: entities/invariants/internal domain events. Avoid Contracts DTOs in Domain folder.");
+
+      return {
+        kind: kind || "(auto)",
+        where,
+        bestKey,
+        bestScore,
+        also,
+        runnerUpScore: runnerUp ? runnerUp[1] : null,
+        reasons: uniq(reasons),
+        warnings: uniq(warnings),
+        violations: uniq(violations),
+        implementHints
+      };
+    }
+
+    function uniq(arr){ return [...new Set(arr)].filter(Boolean); }
+
+    function renderResult(res){
+      const out = $("output");
+      const badge = (txt, cls) => `<span class="tag ${cls}">${txt}</span>`;
+
+      const sev =
+        res.violations.length ? "bad" :
+        res.warnings.length ? "warn" : "ok";
+
+      out.innerHTML = `
+        <h3>Recommended: <span class="mono">${escapeHtml(res.where)}</span></h3>
+        <div class="where">
+          ${badge("Kind: " + escapeHtml(res.kind), "ok")}
+          ${badge("Confidence: " + Math.max(0, res.bestScore).toFixed(0), sev)}
+          ${res.also ? badge("Runner-up: " + escapeHtml(res.also), "warn") : ""}
+        </div>
+
+        ${res.implementHints.length ? `<div class="hint"><b>Implementation notes:</b><ul>${res.implementHints.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+
+        ${res.reasons.length ? `<details open><summary>Why</summary><ul>${res.reasons.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></details>` : ""}
+        ${res.warnings.length ? `<details open><summary style="color:var(--warn)">Warnings</summary><ul>${res.warnings.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></details>` : ""}
+        ${res.violations.length ? `<details open><summary style="color:var(--bad)">Likely boundary violations</summary><ul>${res.violations.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></details>` : ""}
+      `;
+    }
+
+    function escapeHtml(s){
+      return (s||"").replace(/[&<>"']/g, (c)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    // Wizard
+    const wizardSteps = [
+      {
+        q: "Is this a controller/endpoint or middleware (HTTP transport)?",
+        yes: { set: { kind:"controller", touchHttp:"yes" } },
+        no: {}
+      },
+      {
+        q: "Is it a DTO (request/response) OR a public/integration event used across boundaries?",
+        yes: { set: { kind:"dto", publicSurface:"yes" } },
+        no: {}
+      },
+      {
+        q: "Is it an interface/port that should have multiple implementations (repo/provider/bus/resolver)?",
+        yes: { set: { kind:"port", multiImpl:"yes" } },
+        no: {}
+      },
+      {
+        q: "Does it implement provider-specific details (EF/DbContext, Lucene/Elastic, S3/Blob, JWT/OIDC, EventBus impl)?",
+        yes: { set: { kind:"impl" } },
+        no: {}
+      },
+      {
+        q: "Is it domain truth (entity/value object/rules) in a bounded context like Content/Workflow/Media/Tenancy/Search semantics?",
+        yes: { set: { kind:"domain-entity" } },
+        no: {}
+      },
+      {
+        q: "Is it AI orchestration (prompts, embeddings, calling LLM providers)?",
+        yes: { set: { kind:"ai-impl" } },
+        no: {}
+      }
+    ];
+
+    let wizIndex = -1;
+    let wizState = {};
+
+    function startWizard(){
+      wizIndex = 0;
+      wizState = {};
+      renderWizard();
+    }
+
+    function applySet(setObj){
+      if(!setObj) return;
+      Object.entries(setObj).forEach(([k,v])=>{
+        if (k === "kind") $("kind").value = v;
+        if (k === "touchHttp") $("touchHttp").value = v;
+        if (k === "touchDb") $("touchDb").value = v;
+        if (k === "publicSurface") $("publicSurface").value = v;
+        if (k === "multiImpl") $("multiImpl").value = v;
+      });
+    }
+
+    function renderWizard(){
+      const w = $("wizard");
+      if (wizIndex < 0) return;
+
+      if (wizIndex >= wizardSteps.length){
+        const input = collectInput();
+        const res = scoreRecommendation(input);
+        w.innerHTML = `
+          <h3>Wizard Result</h3>
+          <div class="small">Based on your answers:</div>
+          <div class="where" style="margin-top:10px">
+            <span class="tag ok">Recommended: <span class="mono">${escapeHtml(res.where)}</span></span>
+            ${res.also ? `<span class="tag warn">Runner-up: <span class="mono">${escapeHtml(res.also)}</span></span>` : ""}
+          </div>
+          ${res.violations.length ? `<div class="hint" style="border-left-color:var(--bad)"><b>Boundary risks:</b><ul>${res.violations.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+          ${res.warnings.length ? `<div class="hint" style="border-left-color:var(--warn)"><b>Warnings:</b><ul>${res.warnings.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></div>` : ""}
+          <div class="btns" style="margin-top:12px">
+            <button id="wizRestart">Restart Wizard</button>
+          </div>
+          <div class="small">Tip: you can refine using the Quick Input fields and click Analyze.</div>
+        `;
+        $("wizRestart").onclick = startWizard;
+        return;
+      }
+
+      const step = wizardSteps[wizIndex];
+      w.innerHTML = `
+        <h3>Q${wizIndex+1} / ${wizardSteps.length}</h3>
+        <div style="margin-top:6px">${escapeHtml(step.q)}</div>
+        <div class="btns">
+          <button id="wizYes">Yes</button>
+          <button id="wizNo">No</button>
+          <button id="wizSkip">Skip</button>
+        </div>
+        <div class="small">Your answers will pre-fill the top form.</div>
+      `;
+
+      $("wizYes").onclick = () => { applySet(step.yes?.set); wizIndex++; renderWizard(); };
+      $("wizNo").onclick  = () => { applySet(step.no?.set); wizIndex++; renderWizard(); };
+      $("wizSkip").onclick = () => { wizIndex++; renderWizard(); };
+    }
+
+    function collectInput(){
+      return {
+        name: $("name").value,
+        kind: $("kind").value,
+        desc: $("desc").value,
+        touchHttp: $("touchHttp").value,
+        touchDb: $("touchDb").value,
+        publicSurface: $("publicSurface").value,
+        multiImpl: $("multiImpl").value
+      };
+    }
+
+    $("analyzeBtn").onclick = () => {
+      const input = collectInput();
+      const res = scoreRecommendation(input);
+      renderResult(res);
+    };
+
+    $("quizBtn").onclick = () => startWizard();
+
+    $("resetBtn").onclick = () => {
+      $("name").value = "";
+      $("desc").value = "";
+      $("kind").value = "";
+      $("touchHttp").value = "unknown";
+      $("touchDb").value = "unknown";
+      $("publicSurface").value = "unknown";
+      $("multiImpl").value = "unknown";
+      $("output").innerHTML = `<h3>Waiting for input…</h3><div class="small">Enter a class name and click <b>Analyze</b>.</div>`;
+      $("wizard").innerHTML = `<h3>Click “Guided Questions” to start.</h3><div class="small">This asks a few yes/no questions and then recommends a project.</div>`;
+      wizIndex = -1;
+      wizState = {};
+    };
+
+    // Pre-fill examples on first load (optional)
+    // $("name").value = "TenantResolver";
+    // $("desc").value = "Resolves tenant from HTTP header and stores it in AsyncLocal request context.";
+  </script>
+</body>
+</html>

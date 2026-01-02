@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TechWayFit.ContentOS.Api\TechWayFit.ContentOS.Api.csproj" />
+    <ProjectReference Include="../../src/delivery/api/TechWayFit.ContentOS.Api/TechWayFit.ContentOS.Api.csproj" />
   </ItemGroup>
 
 </Project>

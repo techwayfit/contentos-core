@@ -1,0 +1,5 @@
+# Application layer: use cases, handlers, services
+# - StartWorkflowHandler.cs
+# - SubmitForApprovalHandler.cs
+# - ApproveContentHandler.cs
+# - WorkflowService.cs

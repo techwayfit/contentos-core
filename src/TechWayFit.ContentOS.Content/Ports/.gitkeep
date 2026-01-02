@@ -1,0 +1,4 @@
+# Port interfaces (needed from infrastructure)
+# - IContentRepository.cs
+# - IContentVersionStore.cs
+# These will be implemented in Infrastructure.Persistence

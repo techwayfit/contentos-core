@@ -1,0 +1,4 @@
+# Search provider implementations go here
+# - LuceneSearchIndex.cs
+# - AzureSearchIndex.cs
+# - OpenSearchIndex.cs (future)

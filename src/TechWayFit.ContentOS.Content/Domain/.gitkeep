@@ -1,0 +1,5 @@
+# Domain entities and value objects go here
+# - ContentItem.cs (business entity, NOT EF entity)
+# - ContentType.cs
+# - Field.cs
+# - ContentId.cs (value object)

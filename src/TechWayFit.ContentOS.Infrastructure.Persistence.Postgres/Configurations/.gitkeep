@@ -1,0 +1,4 @@
+# PostgreSQL-specific EF configurations go here
+# - Use JSONB columns
+# - Configure array types
+# - Set up full-text search indexes

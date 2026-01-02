@@ -1,0 +1,4 @@
+# Authentication provider implementations go here
+# - OidcAuthenticationProvider.cs
+# - JwtAuthenticationProvider.cs
+# - ApiKeyAuthenticationProvider.cs

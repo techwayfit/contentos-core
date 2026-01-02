@@ -1,0 +1,4 @@
+# Blob storage provider implementations go here
+# - LocalFileSystemBlobStore.cs
+# - AzureBlobStore.cs
+# - S3BlobStore.cs

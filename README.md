@@ -16,14 +16,25 @@ ContentOS Core is a modular, API-first CMS platform designed for multi-tenant, m
 - **No Business Logic**: Platform provides infrastructure, not domain-specific logic
 - **No Licensing/Billing**: Focus on core CMS capabilities only
 
-## Architecture
+## Architecture & Boundaries
+
+## 📚 Documentation
+
+- 🏗️ [Architecture Overview](docs/architecture.md)
+- 📐 [Module & Boundary Rules](docs/module-boundaries.md)
+- 🧭 [Extension Models](docs/extension-model.md)
+
+
+## Architecture & Boundaries
+
+- 📐 [Architecture & Boundary Rules](ARCHITECTURE.md)
+
 
 ### Project Structure
 
 ```
 contentos-core/
-├── docs/
-│   └── adr/                    # Architecture Decision Records
+├── docs/                                     # Architecture Decision Records
 ├── src/
 │   ├── TechWayFit.ContentOS.Abstractions/    # Core interfaces and contracts
 │   ├── TechWayFit.ContentOS.Contracts/       # DTOs, schemas, domain events
@@ -147,6 +158,15 @@ The API will be available at `https://localhost:5001` (or the port specified in 
 ## Architecture Decisions
 
 See [docs/adr](docs/adr) for Architecture Decision Records documenting key design decisions.
+
+## Start here (for humans + Copilot)
+- **Copilot context:** `COPILOT_CONTEXT.md`
+- **Core boundaries:** `src/ContentOS.Abstractions/README.md`
+- **Composition + hosting:** `src/ContentOS.Core/README.md`
+- **HTTP API rules:** `src/ContentOS.Api/README.md`
+
+> Architecture decisions (ADRs) live in `contentos-docs/adr/ADR-000-Index.md`.
+
 
 ## Contributing
 

@@ -1,0 +1,5 @@
+# Identity services go here
+# - JwtTokenValidator.cs
+# - ClaimsTransformer.cs
+# - TokenGenerator.cs
+# - CurrentUserService.cs

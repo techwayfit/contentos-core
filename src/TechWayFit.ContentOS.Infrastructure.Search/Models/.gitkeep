@@ -1,0 +1,4 @@
+# Search models and DTOs go here
+# - SearchDocument.cs
+# - SearchQuery.cs
+# - SearchResult.cs

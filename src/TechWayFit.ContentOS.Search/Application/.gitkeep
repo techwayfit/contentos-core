@@ -1,0 +1,4 @@
+# Application layer: use cases, handlers, services
+# - ExecuteSearchHandler.cs
+# - IndexContentHandler.cs
+# - SearchService.cs

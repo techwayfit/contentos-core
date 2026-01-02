@@ -1,0 +1,5 @@
+# Application layer: use cases, handlers, services
+# - CreateContentItemHandler.cs
+# - UpdateContentItemHandler.cs
+# - PublishContentHandler.cs
+# - ContentService.cs

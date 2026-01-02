@@ -1,0 +1,4 @@
+# Application layer: use cases, handlers, services
+# - UploadMediaHandler.cs
+# - TransformMediaHandler.cs
+# - MediaService.cs

@@ -1,0 +1,3 @@
+# Port interfaces (needed from infrastructure)
+# - ISearchIndex.cs (defined in Abstractions, used here)
+# - ISearchRepository.cs

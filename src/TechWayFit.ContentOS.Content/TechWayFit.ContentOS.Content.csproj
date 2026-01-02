@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\TechWayFit.ContentOS.Abstractions\TechWayFit.ContentOS.Abstractions.csproj" />
+    <ProjectReference Include="..\TechWayFit.ContentOS.Contracts\TechWayFit.ContentOS.Contracts.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

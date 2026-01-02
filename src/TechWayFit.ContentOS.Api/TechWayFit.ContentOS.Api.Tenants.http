@@ -1,0 +1,84 @@
+# Tenant Management API Tests
+
+## Create Tenant (SuperAdmin required)
+
+### Success Case - With SuperAdmin Header
+POST http://localhost:5067/api/admin/tenants
+Content-Type: application/json
+X-SuperAdmin: true
+
+{
+  "key": "techwayfit",
+  "name": "TechWayFit"
+}
+
+### Failure Case - Without SuperAdmin Header (Should return 401)
+POST http://localhost:5067/api/admin/tenants
+Content-Type: application/json
+
+{
+  "key": "acme-corp",
+  "name": "ACME Corporation"
+}
+
+###
+
+## List All Tenants (SuperAdmin required)
+
+GET http://localhost:5067/api/admin/tenants
+X-SuperAdmin: true
+
+###
+
+## Get Tenant by ID (SuperAdmin required)
+
+GET http://localhost:5067/api/admin/tenants/{tenant-id}
+X-SuperAdmin: true
+
+###
+
+## Update Tenant (SuperAdmin required)
+
+PUT http://localhost:5067/api/admin/tenants/{tenant-id}
+Content-Type: application/json
+X-SuperAdmin: true
+
+{
+  "name": "TechWayFit Inc.",
+  "status": 0
+}
+
+###
+
+## Test Regular Content API (Should require X-Tenant-Id, but NOT for admin routes)
+
+### This should fail (400) - Missing X-Tenant-Id
+GET http://localhost:5067/api/content
+
+### This should work - Has X-Tenant-Id
+GET http://localhost:5067/api/content
+X-Tenant-Id: {tenant-id-from-create}
+X-Site-Id: 00000000-0000-0000-0000-000000000001
+X-Environment: production
+
+###
+
+## Notes:
+1. **SuperAdmin Routes** (`/api/admin/*`):
+   - Require `X-SuperAdmin: true` header
+   - Do NOT require `X-Tenant-Id` header
+   - Enforced by `ISuperAdminContext` and `IPolicyEvaluator`
+
+2. **Regular Routes** (all other `/api/*`):
+   - Require `X-Tenant-Id` header (enforced by `TenantMiddleware`)
+   - Do NOT require `X-SuperAdmin` header
+   - Tenant context is automatically set from headers
+
+3. **Tenant Key Validation**:
+   - Must be lowercase alphanumeric with hyphens only
+   - Examples: `techwayfit`, `acme-corp`, `my-company-123`
+   - Invalid: `TechWayFit`, `acme_corp`, `my company`
+
+4. **Tenant Status**:
+   - `0` = Active
+   - `1` = Disabled

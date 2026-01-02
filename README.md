@@ -23,6 +23,7 @@ ContentOS Core is a modular, API-first CMS platform designed for multi-tenant, m
 - 🏗️ [Architecture Overview](docs/architecture.md)
 - 📐 [Module & Boundary Rules](docs/module-boundaries.md)
 - 🧭 [Extension Models](docs/extension-model.md)
+- 🛡 [Architecture Guard](docs/architecture-guard.md)
 
 
 ## Architecture & Boundaries

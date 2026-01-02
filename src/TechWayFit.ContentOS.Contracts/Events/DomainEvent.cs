@@ -1,11 +1,39 @@
 namespace TechWayFit.ContentOS.Contracts.Events;
 
 /// <summary>
-/// Base event for all domain events in the system
+/// Base class for all domain events
+/// Includes tenant context and user context for full auditability
 /// </summary>
 public abstract record DomainEvent
 {
-    public string EventId { get; init; } = Guid.NewGuid().ToString();
+    /// <summary>
+    /// Unique identifier for this event instance
+    /// </summary>
+    public Guid EventId { get; init; } = Guid.NewGuid();
+
+    /// <summary>
+    /// Timestamp when the event occurred
+    /// </summary>
     public DateTimeOffset OccurredAt { get; init; } = DateTimeOffset.UtcNow;
-    public string TenantId { get; init; } = string.Empty;
+
+    /// <summary>
+    /// Tenant identifier for multi-tenant isolation
+    /// </summary>
+    public required Guid TenantId { get; init; }
+
+    /// <summary>
+    /// Site identifier within the tenant
+    /// </summary>
+    public required Guid SiteId { get; init; }
+
+    /// <summary>
+    /// Environment where the event occurred
+    /// </summary>
+    public required string Environment { get; init; }
+
+    /// <summary>
+    /// User who triggered the event (if authenticated)
+    /// </summary>
+    public Guid? UserId { get; init; }
 }
+

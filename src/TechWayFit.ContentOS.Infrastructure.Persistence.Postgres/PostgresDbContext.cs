@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TechWayFit.ContentOS.Infrastructure.Persistence;
+using TechWayFit.ContentOS.Infrastructure.Persistence.Postgres;
 
 namespace TechWayFit.ContentOS.Infrastructure.Persistence.Postgres;
 
@@ -9,7 +9,7 @@ namespace TechWayFit.ContentOS.Infrastructure.Persistence.Postgres;
 /// </summary>
 public class PostgresDbContext : ContentOsDbContext
 {
-    public PostgresDbContext(DbContextOptions<ContentOsDbContext> options)
+    public PostgresDbContext(DbContextOptions<PostgresDbContext> options)
         : base(options)
     {
     }

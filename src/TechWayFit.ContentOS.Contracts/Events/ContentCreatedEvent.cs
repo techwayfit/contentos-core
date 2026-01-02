@@ -5,7 +5,8 @@ namespace TechWayFit.ContentOS.Contracts.Events;
 /// </summary>
 public record ContentCreatedEvent : DomainEvent
 {
-    public string ContentId { get; init; } = string.Empty;
-    public string ContentType { get; init; } = string.Empty;
-    public string CreatedBy { get; init; } = string.Empty;
+    public required Guid ContentId { get; init; }
+    public required string ContentType { get; init; }
+    public required string LanguageCode { get; init; }
+    public required string Title { get; init; }
 }

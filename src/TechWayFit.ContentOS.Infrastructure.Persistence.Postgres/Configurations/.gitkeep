@@ -1,4 +1,2 @@
-# PostgreSQL-specific EF configurations go here
-# - Use JSONB columns
-# - Configure array types
-# - Set up full-text search indexes
+# EF entity configurations go here
+# Example: ContentItemConfiguration.cs

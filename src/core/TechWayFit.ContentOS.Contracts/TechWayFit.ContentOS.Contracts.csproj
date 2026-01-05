@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../features/tenancy/TechWayFit.ContentOS.Tenancy/TechWayFit.ContentOS.Tenancy.csproj" />
+  </ItemGroup>
+
 </Project>

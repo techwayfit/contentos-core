@@ -7,9 +7,8 @@ using TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Core;
 /// Secure preview links (time-bound, optional one-time).
 /// Stores only HMAC-SHA256 hash, never raw tokens.
 /// </summary>
-public class PreviewTokenRow
+public class PreviewTokenRow : BaseEntity
 {
-    public Guid Id { get; set; }
     public Guid TenantId { get; set; }
     public Guid SiteId { get; set; }
     public Guid NodeId { get; set; }
@@ -19,9 +18,7 @@ public class PreviewTokenRow
     public string? IssuedToEmail { get; set; }
     public bool OneTimeUse { get; set; }
     public DateTime? UsedAt { get; set; }
-    public DateTime CreatedOn { get; set; }
-    public Guid CreatedBy { get; set; }
-    public bool IsActive { get; set; }
+    // Id, CreatedOn, CreatedBy, IsActive inherited from BaseEntity
     
     // Navigation
     public SiteRow? Site { get; set; }

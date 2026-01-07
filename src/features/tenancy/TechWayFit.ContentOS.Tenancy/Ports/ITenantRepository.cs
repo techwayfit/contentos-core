@@ -1,39 +1,26 @@
+using TechWayFit.ContentOS.Abstractions.Repositories;
 using TechWayFit.ContentOS.Tenancy.Domain;
 
 namespace TechWayFit.ContentOS.Tenancy.Ports;
 
 /// <summary>
-/// Repository contract for Tenant persistence
+/// Repository interface for Tenant entity persistence
 /// </summary>
-public interface ITenantRepository
+public interface ITenantRepository : IRepository<Tenant, Guid>
 {
     /// <summary>
-    /// Add a new tenant
-    /// </summary>
-    Task<Guid> AddAsync(Tenant tenant, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get tenant by ID
-    /// </summary>
-    Task<Tenant?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get tenant by unique key
+    /// Get tenant by unique key (slug)
     /// </summary>
     Task<Tenant?> GetByKeyAsync(string key, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Update existing tenant
-    /// </summary>
-    Task UpdateAsync(Tenant tenant, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// List all tenants with optional filtering
-    /// </summary>
-    Task<IReadOnlyList<Tenant>> ListAsync(TenantStatus? status = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Check if a tenant key already exists
     /// </summary>
     Task<bool> KeyExistsAsync(string key, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// List tenants by status
+    /// </summary>
+    /// <param name="status">Tenant status enum value</param>
+    Task<IReadOnlyList<Tenant>> ListByStatusAsync(TenantStatus status, CancellationToken cancellationToken = default);
 }

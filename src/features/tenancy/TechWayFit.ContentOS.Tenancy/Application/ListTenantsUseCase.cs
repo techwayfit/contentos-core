@@ -17,6 +17,11 @@ public sealed class ListTenantsUseCase
 
     public async Task<IReadOnlyList<Tenant>> ExecuteAsync(TenantStatus? status = null, CancellationToken cancellationToken = default)
     {
-        return await _repository.ListAsync(status, cancellationToken);
+        if (status.HasValue)
+        {
+            return await _repository.ListByStatusAsync(status.Value, cancellationToken);
+        }
+
+        return await _repository.GetAllAsync(cancellationToken);
     }
 }

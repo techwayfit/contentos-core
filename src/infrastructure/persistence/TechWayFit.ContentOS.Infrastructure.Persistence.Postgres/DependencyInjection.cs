@@ -2,10 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TechWayFit.ContentOS.Abstractions;
-using TechWayFit.ContentOS.Content.Ports;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Repositories;
 using TechWayFit.ContentOS.Tenancy.Ports;
-using TechWayFit.ContentOS.Workflow.Ports;
 
 namespace TechWayFit.ContentOS.Infrastructure.Persistence.Postgres;
 
@@ -33,11 +31,11 @@ public static class DependencyInjection
         // Register ContentOsDbContext as an alias to PostgresDbContext
         services.AddScoped<ContentOsDbContext>(sp => sp.GetRequiredService<PostgresDbContext>());
 
-        // Register repositories
-        services.AddScoped<IContentRepository, ContentRepository>();
-        services.AddScoped<IWorkflowRepository, WorkflowRepository>();
-        services.AddScoped<ITenantRepository, TenantRepository>();
+        // Register UnitOfWork
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+
+        // Register repositories with Postgres-specific implementations
+        services.AddScoped<ITenantRepository, PostgresTenantRepository>();
 
         return services;
     }

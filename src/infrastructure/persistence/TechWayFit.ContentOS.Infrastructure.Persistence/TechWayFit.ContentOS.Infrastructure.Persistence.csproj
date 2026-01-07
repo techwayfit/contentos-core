@@ -7,13 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Provider-agnostic persistence abstractions only -->
+    <!-- Provider-agnostic persistence abstractions -->
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+    <!-- EF Core is provider-agnostic -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../../core/TechWayFit.ContentOS.Abstractions/TechWayFit.ContentOS.Abstractions.csproj" />
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Kernel/TechWayFit.ContentOS.Kernel.csproj" />
+    <ProjectReference Include="../../../features/tenancy/TechWayFit.ContentOS.Tenancy/TechWayFit.ContentOS.Tenancy.csproj" />
+    <ProjectReference Include="../../../features/content/TechWayFit.ContentOS.Content/TechWayFit.ContentOS.Content.csproj" />
+    <ProjectReference Include="../../../features/workflow/TechWayFit.ContentOS.Workflow/TechWayFit.ContentOS.Workflow.csproj" />
   </ItemGroup>
 
 </Project>

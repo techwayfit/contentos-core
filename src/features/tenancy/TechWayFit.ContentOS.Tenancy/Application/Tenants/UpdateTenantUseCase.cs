@@ -2,7 +2,7 @@ using TechWayFit.ContentOS.Abstractions;
 using TechWayFit.ContentOS.Tenancy.Domain;
 using TechWayFit.ContentOS.Tenancy.Ports;
 
-namespace TechWayFit.ContentOS.Tenancy.Application;
+namespace TechWayFit.ContentOS.Tenancy.Application.Tenants;
 
 /// <summary>
 /// Use case: Update an existing tenant

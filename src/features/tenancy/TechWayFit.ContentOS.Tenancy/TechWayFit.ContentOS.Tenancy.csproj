@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../../core/TechWayFit.ContentOS.Abstractions/TechWayFit.ContentOS.Abstractions.csproj" />
+    <ProjectReference Include="../../../core/TechWayFit.ContentOS.Kernel/TechWayFit.ContentOS.Kernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

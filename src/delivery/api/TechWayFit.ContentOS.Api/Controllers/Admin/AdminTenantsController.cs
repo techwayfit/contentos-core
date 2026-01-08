@@ -5,7 +5,7 @@ using TechWayFit.ContentOS.Tenancy.Application.Tenants;
 using TechWayFit.ContentOS.Tenancy.Domain;
 using TechWayFit.ContentOS.Contracts.Dtos;
 
-namespace TechWayFit.ContentOS.Api.Controllers;
+namespace TechWayFit.ContentOS.Api.Controllers.Admin;
 
 /// <summary>
 /// Admin endpoints for tenant management (SuperAdmin only)

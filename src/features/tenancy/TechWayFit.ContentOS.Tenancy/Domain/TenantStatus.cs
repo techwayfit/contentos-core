@@ -11,7 +11,12 @@ public enum TenantStatus
     Active = 0,
 
     /// <summary>
+    /// Tenant is suspended (temporarily disabled)
+    /// </summary>
+    Suspended = 1,
+
+    /// <summary>
     /// Tenant is disabled and cannot be used
     /// </summary>
-    Disabled = 1
+    Disabled = 2
 }

@@ -1,7 +1,7 @@
 using TechWayFit.ContentOS.Tenancy.Domain;
 using TechWayFit.ContentOS.Tenancy.Ports;
 
-namespace TechWayFit.ContentOS.Tenancy.Application;
+namespace TechWayFit.ContentOS.Tenancy.Application.Tenants;
 
 /// <summary>
 /// Use case: List all tenants with optional filtering

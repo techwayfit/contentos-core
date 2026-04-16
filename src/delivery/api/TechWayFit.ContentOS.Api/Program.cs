@@ -1,4 +1,5 @@
-using TechWayFit.ContentOS.Abstractions;
+﻿using TechWayFit.ContentOS.Abstractions;
+using TechWayFit.ContentOS.Api.Configuration;
 using TechWayFit.ContentOS.Api.Middleware;
 using TechWayFit.ContentOS.Api.Security;
 using TechWayFit.ContentOS.Api.Tenancy;
@@ -19,17 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 
-// Add Swagger/OpenAPI
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new()
-    {
-        Title = "TechWayFit ContentOS Core API",
-        Version = "v1",
-        Description = "Headless, API-first content management platform with multi-tenancy and multi-language support"
-    });
-});
+// Add Swagger/OpenAPI documentation
+builder.Services.AddSwaggerDocumentation();
 
 // Add kernel services (platform context services)
 builder.Services.AddKernelServices();
@@ -89,8 +81,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerDocumentation();
 }
 
 app.UseHttpsRedirection();
@@ -108,6 +99,7 @@ app.MapGet("/", () => new
     Name = "TechWayFit ContentOS Core API",
     Version = "1.0.0",
     Description = "Headless, API-first content management platform",
+    Documentation = "/api/swagger",
     Features = new[]
     {
         "Multi-tenant architecture",
@@ -116,7 +108,10 @@ app.MapGet("/", () => new
         "Clean architecture with DDD",
         "PostgreSQL with EF Core"
     }
-});
+})
+.WithName("GetApiInfo")
+.WithTags("System")
+.Produces(200);
 
 app.Run();
 

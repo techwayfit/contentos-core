@@ -1,0 +1,113 @@
+/* ContentOS Swagger UI Custom Styles */
+
+/* Brand colors */
+:root {
+    --brand-primary: #0066cc;
+    --brand-secondary: #004d99;
+    --brand-accent: #00aaff;
+}
+
+/* Header branding */
+.swagger-ui .topbar {
+    background-color: var(--brand-primary);
+    border-bottom: 3px solid var(--brand-accent);
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+    display: none;
+}
+
+/* Info section */
+.swagger-ui .info {
+    margin: 30px 0;
+}
+
+.swagger-ui .info .title {
+    color: var(--brand-primary);
+    font-size: 36px;
+}
+
+.swagger-ui .info .description {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Tags */
+.swagger-ui .opblock-tag {
+    border-bottom: 2px solid var(--brand-accent);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Operation blocks */
+.swagger-ui .opblock.opblock-post {
+    border-color: var(--brand-primary);
+    background: rgba(0, 102, 204, 0.05);
+}
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method {
+    background: var(--brand-primary);
+}
+
+.swagger-ui .opblock.opblock-get {
+    border-color: #61affe;
+    background: rgba(97, 175, 254, 0.05);
+}
+
+.swagger-ui .opblock.opblock-put {
+    border-color: #fca130;
+    background: rgba(252, 161, 48, 0.05);
+}
+
+.swagger-ui .opblock.opblock-delete {
+    border-color: #f93e3e;
+    background: rgba(249, 62, 62, 0.05);
+}
+
+/* Response sections */
+.swagger-ui .responses-inner h4,
+.swagger-ui .responses-inner h5 {
+color: var(--brand-primary);
+}
+
+/* Try it out button */
+.swagger-ui .btn.try-out__btn {
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+}
+
+.swagger-ui .btn.try-out__btn:hover {
+    background: var(--brand-primary);
+    color: white;
+}
+
+/* Execute button */
+.swagger-ui .btn.execute {
+    background-color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+.swagger-ui .btn.execute:hover {
+    background-color: var(--brand-secondary);
+    border-color: var(--brand-secondary);
+}
+
+/* Authorization */
+.swagger-ui .scheme-container {
+    background: #f7f7f7;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+/* Models section */
+.swagger-ui .model-box {
+    background: rgba(0, 102, 204, 0.03);
+}
+
+/* Custom banner */
+.swagger-ui::before {
+    content: "";
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+}

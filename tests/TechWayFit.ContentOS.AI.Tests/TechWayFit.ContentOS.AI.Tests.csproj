@@ -15,11 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <ProjectReference Include="..\..\src\features\ai\TechWayFit.ContentOS.AI\TechWayFit.ContentOS.AI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TechWayFit.ContentOS.AI\TechWayFit.ContentOS.AI.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>

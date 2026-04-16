@@ -50,7 +50,7 @@ public class WorkflowTransitionRepository : EfCoreRepository<WorkflowTransition,
 
     public async Task<IEnumerable<WorkflowTransition>> GetByDefinitionAsync(Guid tenantId, Guid workflowDefinitionId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<WorkflowTransitionRow>()
             .Where(r => r.TenantId == tenantId && r.WorkflowDefinitionId == workflowDefinitionId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -58,7 +58,7 @@ public class WorkflowTransitionRepository : EfCoreRepository<WorkflowTransition,
 
     public async Task<IEnumerable<WorkflowTransition>> GetAllowedTransitionsAsync(Guid tenantId, Guid fromStateId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<WorkflowTransitionRow>()
             .Where(r => r.TenantId == tenantId && r.FromStateId == fromStateId)
             .ToListAsync();
         return rows.Select(MapToDomain);

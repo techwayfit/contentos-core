@@ -58,14 +58,14 @@ public class PreviewTokenRepository : EfCoreRepository<PreviewToken, PreviewToke
 
     public async Task<PreviewToken?> GetByTokenHashAsync(Guid tenantId, string tokenHash)
     {
-        var row = await DbSet
+        var row = await Context.Set<PreviewTokenRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.TokenHash == tokenHash && r.IsActive);
         return row != null ? MapToDomain(row) : null;
     }
 
     public async Task MarkUsedAsync(Guid tokenId)
     {
-        var row = await DbSet.FindAsync(tokenId);
+        var row = await Context.Set<PreviewTokenRow>().FindAsync(tokenId);
         if (row != null)
         {
             row.UsedAt = DateTime.UtcNow;
@@ -75,7 +75,7 @@ public class PreviewTokenRepository : EfCoreRepository<PreviewToken, PreviewToke
 
     public async Task<int> CleanupExpiredAsync()
     {
-        var expiredTokens = await DbSet
+        var expiredTokens = await Context.Set<PreviewTokenRow>()
             .Where(r => r.ExpiresAt < DateTime.UtcNow && r.IsActive)
             .ToListAsync();
         

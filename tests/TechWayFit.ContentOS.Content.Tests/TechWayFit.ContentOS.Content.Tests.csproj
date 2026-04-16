@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TechWayFit.ContentOS.Content\TechWayFit.ContentOS.Content.csproj" />
+    <ProjectReference Include="..\..\src\features\content\TechWayFit.ContentOS.Content\TechWayFit.ContentOS.Content.csproj" />
   </ItemGroup>
 
 </Project>

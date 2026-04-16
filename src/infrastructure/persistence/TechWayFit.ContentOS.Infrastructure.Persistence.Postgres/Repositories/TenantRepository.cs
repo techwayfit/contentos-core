@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Core;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Entities;
+using TechWayFit.ContentOS.Infrastructure.Persistence.Repositories;
 using TechWayFit.ContentOS.Tenancy.Domain;
 using TechWayFit.ContentOS.Tenancy.Ports;
 
@@ -9,7 +11,7 @@ namespace TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Repositories;
 /// <summary>
 /// EF Core repository implementation for Tenant entity
 /// </summary>
-public sealed class TenantRepository : EfCoreRepository<Tenant, TenantRow, Guid>, ITenantRepository
+public class TenantRepository : EfCoreRepository<Tenant, TenantRow, Guid>, ITenantRepository
 {
     public TenantRepository(ContentOsDbContext context) : base(context)
     {
@@ -61,7 +63,7 @@ public sealed class TenantRepository : EfCoreRepository<Tenant, TenantRow, Guid>
 
     // ==================== SPECIFIC METHODS ====================
 
-    public async Task<Tenant?> GetByKeyAsync(string key, CancellationToken cancellationToken = default)
+    public async virtual Task<Tenant?> GetByKeyAsync(string key, CancellationToken cancellationToken = default)
     {
         var row = await Context.Set<TenantRow>()
             .AsNoTracking()

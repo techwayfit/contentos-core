@@ -5,10 +5,8 @@ namespace TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Core;
 /// Provider-agnostic - can be used with any EF Core provider
 /// Note: Tenants are NOT tenant-scoped (they ARE the tenants)
 /// </summary>
-public sealed class TenantRow
+public sealed class TenantRow: BaseEntity
 {
-    public Guid Id { get; set; }
-
     /// <summary>
     /// Unique tenant key (slug) - used in URLs and API routing
     /// Example: "techwayfit", "acme-corp"

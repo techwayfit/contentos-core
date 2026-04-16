@@ -48,7 +48,7 @@ public class ModuleSettingRepository : EfCoreRepository<ModuleSetting, ModuleSet
 
     public async Task<IEnumerable<ModuleSetting>> GetByModuleAsync(Guid tenantId, Guid moduleId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ModuleSettingRow>()
             .Where(r => r.TenantId == tenantId && r.ModuleId == moduleId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -56,7 +56,7 @@ public class ModuleSettingRepository : EfCoreRepository<ModuleSetting, ModuleSet
 
     public async Task<ModuleSetting?> GetByKeyAsync(Guid tenantId, Guid moduleId, string settingKey)
     {
-        var row = await DbSet
+        var row = await Context.Set<ModuleSettingRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.ModuleId == moduleId && r.SettingKey == settingKey);
         return row != null ? MapToDomain(row) : null;
     }

@@ -21,7 +21,7 @@ public class UserRoleRepository : EfCoreRepository<UserRole, UserRoleRow, Guid>,
             TenantId = row.TenantId,
             UserId = row.UserId,
             RoleId = row.RoleId,
-            Audit = MapAuditToDomain(row)
+            AssignedAt = row.CreatedOn
         };
     }
 
@@ -32,10 +32,10 @@ public class UserRoleRepository : EfCoreRepository<UserRole, UserRoleRow, Guid>,
             Id = entity.Id,
             TenantId = entity.TenantId,
             UserId = entity.UserId,
-            RoleId = entity.RoleId
+            RoleId = entity.RoleId,
+            CreatedOn = entity.AssignedAt.DateTime
         };
         
-        MapAuditToRow(entity.Audit, row);
         return row;
     }
 
@@ -67,13 +67,9 @@ public class UserRoleRepository : EfCoreRepository<UserRole, UserRoleRow, Guid>,
             Id = Guid.NewGuid(),
             TenantId = tenantId,
             UserId = userId,
-            RoleId = roleId
+            RoleId = roleId,
+            AssignedAt = DateTimeOffset.UtcNow
         };
-        if(null!=createdBy)
-        {
-            userRole.Audit.CreatedBy = createdBy.Value;
-            userRole.Audit.CreatedOn = DateTime.UtcNow;
-        }
         await AddAsync(userRole);
     }
 

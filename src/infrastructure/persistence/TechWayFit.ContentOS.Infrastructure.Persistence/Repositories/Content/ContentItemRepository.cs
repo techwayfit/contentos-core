@@ -46,17 +46,42 @@ public class ContentItemRepository : EfCoreRepository<ContentItem, ContentItemRo
         return row => row.Id == id;
     }
 
+    public async Task<IReadOnlyList<ContentItem>> GetByContentTypeIdAsync(Guid tenantId, Guid contentTypeId, CancellationToken cancellationToken = default)
+    {
+        var rows = await Context.Set<ContentItemRow>()
+            .Where(r => r.TenantId == tenantId && r.ContentTypeId == contentTypeId)
+            .ToListAsync(cancellationToken);
+        return rows.Select(MapToDomain).ToList();
+    }
+
+    public async Task<IReadOnlyList<ContentItem>> GetBySiteIdAsync(Guid tenantId, Guid siteId, CancellationToken cancellationToken = default)
+    {
+        var rows = await Context.Set<ContentItemRow>()
+            .Where(r => r.TenantId == tenantId && r.SiteId == siteId)
+            .ToListAsync(cancellationToken);
+        return rows.Select(MapToDomain).ToList();
+    }
+
+    public async Task<IReadOnlyList<ContentItem>> GetByStatusAsync(Guid tenantId, string status, CancellationToken cancellationToken = default)
+    {
+        var rows = await Context.Set<ContentItemRow>()
+            .Where(r => r.TenantId == tenantId && r.Status == status)
+            .ToListAsync(cancellationToken);
+        return rows.Select(MapToDomain).ToList();
+    }
+
+    // Legacy methods (keeping for backward compatibility)
     public async Task<IEnumerable<ContentItem>> GetBySiteAsync(Guid tenantId, Guid siteId)
     {
-        var rows = await DbSet
-            .Where(r => r.TenantId == tenantId && r.SiteId == siteId)
+        var rows = await Context.Set<ContentItemRow>()
+   .Where(r => r.TenantId == tenantId && r.SiteId == siteId)
             .ToListAsync();
         return rows.Select(MapToDomain);
     }
 
     public async Task<IEnumerable<ContentItem>> GetByTypeAsync(Guid tenantId, Guid contentTypeId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ContentItemRow>()
             .Where(r => r.TenantId == tenantId && r.ContentTypeId == contentTypeId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -64,11 +89,11 @@ public class ContentItemRepository : EfCoreRepository<ContentItem, ContentItemRo
 
     public async Task ArchiveAsync(Guid itemId)
     {
-        var row = await DbSet.FindAsync(itemId);
+    var row = await Context.Set<ContentItemRow>().FindAsync(itemId);
         if (row != null)
         {
             row.Status = "archived";
-            row.UpdatedOn = DateTime.UtcNow;
-        }
+         row.UpdatedOn = DateTime.UtcNow;
+}
     }
 }

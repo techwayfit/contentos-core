@@ -1,8 +1,9 @@
-using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using TechWayFit.ContentOS.Abstractions.Repositories;
 using TechWayFit.ContentOS.Content.Domain.Layout;
 using TechWayFit.ContentOS.Content.Ports.Layout;
+using TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Content;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Layout;
 
 namespace TechWayFit.ContentOS.Infrastructure.Persistence.Repositories.Layout;
@@ -52,7 +53,7 @@ public class ComponentDefinitionRepository : EfCoreRepository<ComponentDefinitio
 
     public async Task<ComponentDefinition?> GetByKeyAsync(Guid tenantId, string componentKey, int? version = null)
     {
-        var query = DbSet.Where(r => r.TenantId == tenantId && r.ComponentKey == componentKey);
+        var query = Context.Set<ComponentDefinitionRow>().Where(r => r.TenantId == tenantId && r.ComponentKey == componentKey);
         
         if (version.HasValue)
         {
@@ -69,7 +70,7 @@ public class ComponentDefinitionRepository : EfCoreRepository<ComponentDefinitio
 
     public async Task<IEnumerable<ComponentDefinition>> GetByModuleAsync(Guid tenantId, string ownerModule)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ComponentDefinitionRow>()
             .Where(r => r.TenantId == tenantId && r.OwnerModule == ownerModule)
             .ToListAsync();
         return rows.Select(MapToDomain);

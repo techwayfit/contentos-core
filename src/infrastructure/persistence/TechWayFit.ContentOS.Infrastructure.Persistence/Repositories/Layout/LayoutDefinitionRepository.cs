@@ -50,7 +50,7 @@ public class LayoutDefinitionRepository : EfCoreRepository<LayoutDefinition, Lay
 
     public async Task<LayoutDefinition?> GetByKeyAsync(Guid tenantId, string layoutKey, int? version = null)
     {
-        var query = DbSet.Where(r => r.TenantId == tenantId && r.LayoutKey == layoutKey);
+        var query = Context.Set<LayoutDefinitionRow>().Where(r => r.TenantId == tenantId && r.LayoutKey == layoutKey);
         
         if (version.HasValue)
         {
@@ -67,7 +67,7 @@ public class LayoutDefinitionRepository : EfCoreRepository<LayoutDefinition, Lay
 
     public async Task<IEnumerable<LayoutDefinition>> GetByTenantAsync(Guid tenantId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<LayoutDefinitionRow>()
             .Where(r => r.TenantId == tenantId)
             .ToListAsync();
         return rows.Select(MapToDomain);

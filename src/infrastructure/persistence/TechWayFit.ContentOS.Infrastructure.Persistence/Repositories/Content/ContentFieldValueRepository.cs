@@ -50,7 +50,7 @@ public class ContentFieldValueRepository : EfCoreRepository<ContentFieldValue, C
 
     public async Task<IEnumerable<ContentFieldValue>> GetByVersionAsync(Guid tenantId, Guid contentVersionId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ContentFieldValueRow>()
             .Where(r => r.TenantId == tenantId && r.ContentVersionId == contentVersionId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -58,7 +58,7 @@ public class ContentFieldValueRepository : EfCoreRepository<ContentFieldValue, C
 
     public async Task<ContentFieldValue?> GetByFieldKeyAsync(Guid tenantId, Guid contentVersionId, string fieldKey, string? locale = null)
     {
-        var query = DbSet.Where(r => r.TenantId == tenantId && r.ContentVersionId == contentVersionId && r.FieldKey == fieldKey);
+        var query = Context.Set<ContentFieldValueRow>().Where(r => r.TenantId == tenantId && r.ContentVersionId == contentVersionId && r.FieldKey == fieldKey);
         
         if (locale != null)
         {
@@ -75,7 +75,7 @@ public class ContentFieldValueRepository : EfCoreRepository<ContentFieldValue, C
 
     public async Task<IEnumerable<ContentFieldValue>> GetLocalizedAsync(Guid tenantId, Guid contentVersionId, string locale)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ContentFieldValueRow>()
             .Where(r => r.TenantId == tenantId && r.ContentVersionId == contentVersionId && r.Locale == locale)
             .ToListAsync();
         return rows.Select(MapToDomain);

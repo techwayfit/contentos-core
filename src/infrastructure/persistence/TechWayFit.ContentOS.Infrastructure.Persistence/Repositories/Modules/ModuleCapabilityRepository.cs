@@ -50,7 +50,7 @@ public class ModuleCapabilityRepository : EfCoreRepository<ModuleCapability, Mod
 
     public async Task<IEnumerable<ModuleCapability>> GetByModuleAsync(Guid tenantId, Guid moduleId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ModuleCapabilityRow>()
             .Where(r => r.TenantId == tenantId && r.ModuleId == moduleId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -58,14 +58,14 @@ public class ModuleCapabilityRepository : EfCoreRepository<ModuleCapability, Mod
 
     public async Task<ModuleCapability?> GetByKeyAsync(Guid tenantId, Guid moduleId, string capabilityKey)
     {
-        var row = await DbSet
+        var row = await Context.Set<ModuleCapabilityRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.ModuleId == moduleId && r.CapabilityKey == capabilityKey);
         return row != null ? MapToDomain(row) : null;
     }
 
     public async Task EnableAsync(Guid capabilityId)
     {
-        var row = await DbSet.FindAsync(capabilityId);
+        var row = await Context.Set<ModuleCapabilityRow>().FindAsync(capabilityId);
         if (row != null)
         {
             row.IsActive = true;
@@ -75,7 +75,7 @@ public class ModuleCapabilityRepository : EfCoreRepository<ModuleCapability, Mod
 
     public async Task DisableAsync(Guid capabilityId)
     {
-        var row = await DbSet.FindAsync(capabilityId);
+        var row = await Context.Set<ModuleCapabilityRow>().FindAsync(capabilityId);
         if (row != null)
         {
             row.IsActive = false;

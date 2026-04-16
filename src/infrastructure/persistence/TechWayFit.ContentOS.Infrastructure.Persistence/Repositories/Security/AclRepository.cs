@@ -54,7 +54,7 @@ public class AclRepository : EfCoreRepository<AclEntry, AclEntryRow, Guid>, IAcl
 
     public async Task<IEnumerable<AclEntry>> GetByScopeAsync(Guid tenantId, string scopeType, Guid scopeId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<AclEntryRow>()
             .Where(r => r.TenantId == tenantId && r.ScopeType == scopeType && r.ScopeId == scopeId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -62,7 +62,7 @@ public class AclRepository : EfCoreRepository<AclEntry, AclEntryRow, Guid>, IAcl
 
     public async Task<IEnumerable<AclEntry>> GetByPrincipalAsync(Guid tenantId, string principalType, Guid principalId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<AclEntryRow>()
             .Where(r => r.TenantId == tenantId && r.PrincipalType == principalType && r.PrincipalId == principalId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -70,7 +70,7 @@ public class AclRepository : EfCoreRepository<AclEntry, AclEntryRow, Guid>, IAcl
 
     public async Task<bool> CheckPermissionAsync(Guid tenantId, string scopeType, Guid scopeId, string principalType, Guid principalId, string action)
     {
-        var hasPermission = await DbSet
+        var hasPermission = await Context.Set<AclEntryRow>()
             .AnyAsync(r => r.TenantId == tenantId 
                 && r.ScopeType == scopeType 
                 && r.ScopeId == scopeId

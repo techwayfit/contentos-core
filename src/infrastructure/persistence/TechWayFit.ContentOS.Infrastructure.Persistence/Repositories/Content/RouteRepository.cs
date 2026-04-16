@@ -50,7 +50,7 @@ public class RouteRepository : EfCoreRepository<Route, RouteRow, Guid>, IRouteRe
 
     public async Task<IEnumerable<Route>> GetByNodeAsync(Guid tenantId, Guid nodeId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<RouteRow>()
             .Where(r => r.TenantId == tenantId && r.NodeId == nodeId)
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -58,14 +58,14 @@ public class RouteRepository : EfCoreRepository<Route, RouteRow, Guid>, IRouteRe
 
     public async Task<Route?> GetByRoutePathAsync(Guid tenantId, Guid siteId, string routePath)
     {
-        var row = await DbSet
+        var row = await Context.Set<RouteRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.SiteId == siteId && r.RoutePath == routePath);
         return row != null ? MapToDomain(row) : null;
     }
 
     public async Task<Route?> GetPrimaryAsync(Guid tenantId, Guid nodeId)
     {
-        var row = await DbSet
+        var row = await Context.Set<RouteRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.NodeId == nodeId && r.IsPrimary);
         return row != null ? MapToDomain(row) : null;
     }

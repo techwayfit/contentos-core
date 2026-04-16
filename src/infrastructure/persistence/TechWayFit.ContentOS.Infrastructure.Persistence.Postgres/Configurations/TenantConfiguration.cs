@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Conventions;
+using TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Core;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Entities;
 
 namespace TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Configurations;

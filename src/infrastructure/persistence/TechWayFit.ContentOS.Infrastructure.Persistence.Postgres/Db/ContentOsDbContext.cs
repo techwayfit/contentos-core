@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TechWayFit.ContentOS.Abstractions;
+using TechWayFit.ContentOS.Infrastructure.Persistence.Entities.Core;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Internal;
 using TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Entities;
 

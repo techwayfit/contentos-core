@@ -48,7 +48,7 @@ public class ContentLayoutRepository : EfCoreRepository<ContentLayout, ContentLa
 
     public async Task<ContentLayout?> GetByVersionAsync(Guid tenantId, Guid contentVersionId)
     {
-        var row = await DbSet
+        var row = await Context.Set<ContentLayoutRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.ContentVersionId == contentVersionId);
         return row != null ? MapToDomain(row) : null;
     }

@@ -20,7 +20,7 @@ public abstract class EfCoreRepository<TEntity, TRow, TKey> : IRepository<TEntit
     where TEntity : class
     where TRow : class
 {
-    protected readonly DbContext Context;
+    public readonly DbContext Context;
 
     protected EfCoreRepository(DbContext context)
     {

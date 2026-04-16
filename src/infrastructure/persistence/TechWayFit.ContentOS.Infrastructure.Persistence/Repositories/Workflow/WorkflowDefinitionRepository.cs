@@ -46,23 +46,39 @@ public class WorkflowDefinitionRepository : EfCoreRepository<WorkflowDefinition,
         return row => row.Id == id;
     }
 
-    public async Task<WorkflowDefinition?> GetByKeyAsync(Guid tenantId, string workflowKey)
+    public async Task<WorkflowDefinition?> GetByWorkflowKeyAsync(Guid tenantId, string workflowKey, CancellationToken cancellationToken = default)
     {
-        var row = await DbSet
-            .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.WorkflowKey == workflowKey);
+        var row = await Context.Set<WorkflowDefinitionRow>()
+            .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.WorkflowKey == workflowKey, cancellationToken);
         return row != null ? MapToDomain(row) : null;
     }
 
-    public async Task<WorkflowDefinition?> GetDefaultAsync(Guid tenantId)
+    public async Task<WorkflowDefinition?> GetDefaultAsync(Guid tenantId, CancellationToken cancellationToken = default)
     {
-        var row = await DbSet
-            .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.IsDefault);
+        var row = await Context.Set<WorkflowDefinitionRow>()
+            .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.IsDefault, cancellationToken);
+        return row != null ? MapToDomain(row) : null;
+    }
+
+    public async Task<IReadOnlyList<WorkflowDefinition>> GetByTenantIdAsync(Guid tenantId, CancellationToken cancellationToken = default)
+    {
+        var rows = await Context.Set<WorkflowDefinitionRow>()
+            .Where(r => r.TenantId == tenantId)
+            .ToListAsync(cancellationToken);
+        return rows.Select(MapToDomain).ToList();
+    }
+
+    // Legacy methods (keeping for backward compatibility)
+    public async Task<WorkflowDefinition?> GetByKeyAsync(Guid tenantId, string workflowKey)
+    {
+        var row = await Context.Set<WorkflowDefinitionRow>()
+            .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.WorkflowKey == workflowKey);
         return row != null ? MapToDomain(row) : null;
     }
 
     public async Task<IEnumerable<WorkflowDefinition>> GetByTenantAsync(Guid tenantId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<WorkflowDefinitionRow>()
             .Where(r => r.TenantId == tenantId)
             .ToListAsync();
         return rows.Select(MapToDomain);

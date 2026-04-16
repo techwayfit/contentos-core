@@ -54,14 +54,14 @@ public class ModuleRepository : EfCoreRepository<Module, ModuleRow, Guid>, IModu
 
     public async Task<Module?> GetByKeyAsync(Guid tenantId, string moduleKey)
     {
-        var row = await DbSet
+        var row = await Context.Set<ModuleRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.ModuleKey == moduleKey);
         return row != null ? MapToDomain(row) : null;
     }
 
     public async Task<IEnumerable<Module>> GetInstalledAsync(Guid tenantId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ModuleRow>()
             .Where(r => r.TenantId == tenantId && r.InstallationStatus == "Installed")
             .ToListAsync();
         return rows.Select(MapToDomain);
@@ -79,7 +79,7 @@ public class ModuleRepository : EfCoreRepository<Module, ModuleRow, Guid>, IModu
 
     public async Task UpdateStatusAsync(Guid moduleId, string status)
     {
-        var row = await DbSet.FindAsync(moduleId);
+        var row = await Context.Set<ModuleRow>().FindAsync(moduleId);
         if (row != null)
         {
             row.InstallationStatus = status;

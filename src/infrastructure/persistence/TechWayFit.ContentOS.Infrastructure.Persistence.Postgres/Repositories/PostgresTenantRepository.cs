@@ -11,7 +11,7 @@ namespace TechWayFit.ContentOS.Infrastructure.Persistence.Postgres.Repositories;
 /// </summary>
 public sealed class PostgresTenantRepository : TenantRepository
 {
-    public PostgresTenantRepository(DbContext context) : base(context)
+    public PostgresTenantRepository(ContentOsDbContext context) : base(context)
     {
     }
 

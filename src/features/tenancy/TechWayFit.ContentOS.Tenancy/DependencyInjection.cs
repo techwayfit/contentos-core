@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using TechWayFit.ContentOS.Tenancy.Application;
+using TechWayFit.ContentOS.Tenancy.Application.Tenants;
 
 namespace TechWayFit.ContentOS.Tenancy;
 

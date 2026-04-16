@@ -73,7 +73,7 @@ builder.Services.AddPostgresPersistence(builder.Configuration);
 // Add Tenancy feature
 builder.Services.AddTenancy();
 
-// Add application use cases
+// Add application use cases (stub implementations)
 builder.Services.AddScoped<ICreateContentUseCase, CreateContentUseCase>();
 builder.Services.AddScoped<IAddLocalizationUseCase, AddLocalizationUseCase>();
 builder.Services.AddScoped<ITransitionWorkflowUseCase, TransitionWorkflowUseCase>();

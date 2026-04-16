@@ -50,7 +50,7 @@ public class ModuleMigrationRepository : EfCoreRepository<ModuleMigration, Modul
 
     public async Task<IEnumerable<ModuleMigration>> GetByModuleAsync(Guid tenantId, Guid moduleId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ModuleMigrationRow>()
             .Where(r => r.TenantId == tenantId && r.ModuleId == moduleId)
             .OrderBy(r => r.AppliedAt)
             .ToListAsync();
@@ -66,7 +66,7 @@ public class ModuleMigrationRepository : EfCoreRepository<ModuleMigration, Modul
     {
         // This is a simplified implementation
         // In production, you would compare against a list of available migrations
-        var rows = await DbSet
+        var rows = await Context.Set<ModuleMigrationRow>()
             .Where(r => r.TenantId == tenantId && r.ModuleId == moduleId)
             .ToListAsync();
         return rows.Select(MapToDomain);

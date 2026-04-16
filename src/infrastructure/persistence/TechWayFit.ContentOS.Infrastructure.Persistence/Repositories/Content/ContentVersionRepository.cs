@@ -52,7 +52,7 @@ public class ContentVersionRepository : EfCoreRepository<ContentVersion, Content
 
     public async Task<IEnumerable<ContentVersion>> GetByItemAsync(Guid tenantId, Guid contentItemId)
     {
-        var rows = await DbSet
+        var rows = await Context.Set<ContentVersionRow>()
             .Where(r => r.TenantId == tenantId && r.ContentItemId == contentItemId)
             .OrderByDescending(r => r.VersionNumber)
             .ToListAsync();
@@ -61,14 +61,14 @@ public class ContentVersionRepository : EfCoreRepository<ContentVersion, Content
 
     public async Task<ContentVersion?> GetPublishedAsync(Guid tenantId, Guid contentItemId)
     {
-        var row = await DbSet
+        var row = await Context.Set<ContentVersionRow>()
             .FirstOrDefaultAsync(r => r.TenantId == tenantId && r.ContentItemId == contentItemId && r.Lifecycle == "published");
         return row != null ? MapToDomain(row) : null;
     }
 
     public async Task<ContentVersion?> GetLatestDraftAsync(Guid tenantId, Guid contentItemId)
     {
-        var row = await DbSet
+        var row = await Context.Set<ContentVersionRow>()
             .Where(r => r.TenantId == tenantId && r.ContentItemId == contentItemId && r.Lifecycle == "draft")
             .OrderByDescending(r => r.VersionNumber)
             .FirstOrDefaultAsync();
@@ -77,7 +77,7 @@ public class ContentVersionRepository : EfCoreRepository<ContentVersion, Content
 
     public async Task PublishAsync(Guid versionId, DateTime? publishedAt = null)
     {
-        var row = await DbSet.FindAsync(versionId);
+        var row = await Context.Set<ContentVersionRow>().FindAsync(versionId);
         if (row != null)
         {
             row.Lifecycle = "published";
@@ -88,7 +88,7 @@ public class ContentVersionRepository : EfCoreRepository<ContentVersion, Content
 
     public async Task ArchiveAsync(Guid versionId)
     {
-        var row = await DbSet.FindAsync(versionId);
+        var row = await Context.Set<ContentVersionRow>().FindAsync(versionId);
         if (row != null)
         {
             row.Lifecycle = "archived";

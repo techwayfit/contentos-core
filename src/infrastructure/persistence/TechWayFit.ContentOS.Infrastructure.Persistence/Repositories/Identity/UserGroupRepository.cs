@@ -21,7 +21,7 @@ public class UserGroupRepository : EfCoreRepository<UserGroup, UserGroupRow, Gui
             TenantId = row.TenantId,
             UserId = row.UserId,
             GroupId = row.GroupId,
-            Audit = MapAuditToDomain(row)
+            JoinedAt = row.CreatedOn
         };
     }
 
@@ -32,10 +32,10 @@ public class UserGroupRepository : EfCoreRepository<UserGroup, UserGroupRow, Gui
             Id = entity.Id,
             TenantId = entity.TenantId,
             UserId = entity.UserId,
-            GroupId = entity.GroupId
+            GroupId = entity.GroupId,   
+            CreatedOn = entity.JoinedAt.UtcDateTime
         };
         
-        MapAuditToRow(entity.Audit, row);
         return row;
     }
 
@@ -68,13 +68,8 @@ public class UserGroupRepository : EfCoreRepository<UserGroup, UserGroupRow, Gui
             TenantId = tenantId,
             UserId = userId,
             GroupId = groupId,
-            
+            JoinedAt = DateTimeOffset.UtcNow
         };
-        if(null!=createdBy)
-        {
-            userGroup.Audit.CreatedBy = createdBy.Value;
-            userGroup.Audit.CreatedOn = DateTime.UtcNow;
-        }
         await AddAsync(userGroup);
     }
 

@@ -1,13 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TechWayFit.ContentOS.Abstractions.Security;
 
 namespace TechWayFit.ContentOS.Infrastructure.Identity;
 
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Adds identity and authentication services
+    /// </summary>
     public static IServiceCollection AddIdentity(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -26,9 +31,10 @@ public static class DependencyInjection
                 throw new InvalidOperationException($"Unknown authentication provider: {provider}");
         }
 
-        // Register common services
-        // services.AddScoped<ICurrentUser, CurrentUserService>();
-        // services.AddScoped<IClaimsTransformer, ClaimsTransformer>();
+        // Register context providers
+        services.AddHttpContextAccessor();
+        services.AddScoped<IAuthenticationContext, HttpAuthenticationContext>();
+        services.AddScoped<ITenantContext, HttpTenantContext>();
 
         return services;
     }
@@ -59,6 +65,21 @@ public static class DependencyInjection
                     ValidAudience = audience,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(secretKey))
+                };
+
+                // Support API key authentication
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        // Check for API key in header (for service accounts)
+                        var apiKey = context.Request.Headers["X-API-Key"].FirstOrDefault();
+                        if (!string.IsNullOrEmpty(apiKey))
+                        {
+                            // TODO: Validate API key and generate claims
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

@@ -12,6 +12,7 @@
     <ProjectReference Include="../../../features/tenancy/TechWayFit.ContentOS.Tenancy/TechWayFit.ContentOS.Tenancy.csproj" />
     <ProjectReference Include="../../../infrastructure/events/TechWayFit.ContentOS.Infrastructure.Events/TechWayFit.ContentOS.Infrastructure.Events.csproj" />
     <ProjectReference Include="../../../infrastructure/runtime/TechWayFit.ContentOS.Infrastructure.Runtime/TechWayFit.ContentOS.Infrastructure.Runtime.csproj" />
+    <ProjectReference Include="../../../infrastructure/identity/TechWayFit.ContentOS.Infrastructure.Identity/TechWayFit.ContentOS.Infrastructure.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
